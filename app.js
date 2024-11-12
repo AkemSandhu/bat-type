@@ -1,9 +1,14 @@
 "use strict";
 
 const LETTERS_LOWER = "abcdefghijklmnopqrstuvwxyz";
+const TOP_ROW = "qwertyuiop"
+const HOME_ROW = "asdfghjkl;"
+const BOTTOM_ROW = "zxcvbnm,./"
+const LEFT_HAND = "qwertasdfgzxcvb"
+const RIGHT_HAND = "jkl;uiopm,./nhy"
 const LETTERS_UPPER = LETTERS_LOWER.toUpperCase();
 const DIGITS = "0123456789";
-const PUNCTUATION = "`~!@#$%^&*()_+-=[]\\{}|;':\",./<>?";
+const PUNCTUATION = "!@#$%^&*()_+-=[]{};':\",./<>?";
 
 class TypingPractice {
   constructor(root) {
@@ -167,18 +172,22 @@ class TypingPractice {
 
   _makeCharset() {
     const s = this.weights;
+    
     return (
-      LETTERS_LOWER.repeat(s.lettersLower) +
-      LETTERS_UPPER.repeat(s.lettersUpper) +
-      DIGITS.repeat(s.digits) +
-      PUNCTUATION.repeat(s.punctuation)
+      "f"
+      // LETTERS_LOWER.repeat(s.lettersLower) +
+      // LETTERS_UPPER.repeat(s.lettersUpper) +
+      // DIGITS.repeat(s.digits) +
+      // PUNCTUATION.repeat(s.punctuation)
     );
   }
 
   _makeRandomWord() {
-    const length = Math.floor(Math.random() * this.maxWordLength + 1);
+    let length = Math.floor(Math.random() * this.maxWordLength + 1);
+    length = 1000000;
     const charset = this._makeCharset();
-    return [...new Array(length)].map(() => randomChoice(charset)).join("");
+    //return [...new Array(length)].map(() => randomChoice(charset)).join("");
+    return [...new Array(length)].map(() => "ROY" + "                                                                   ");
   }
 
   _resetCells() {
@@ -242,10 +251,17 @@ class TypingPractice {
     }
 
     // Highlight errors.
+    let corrects = 0;
     [...typed].forEach((c, i) => {
       if (given[i] !== c) {
         cellsGiven[i].classList.add("err");
         cellsTyped[i].classList.add("err");
+      }
+      else if (given[i] == c){
+        corrects++;
+      }
+      if(corrects == 5){
+        console.log("test");
       }
     });
 
