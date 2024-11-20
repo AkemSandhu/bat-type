@@ -15,7 +15,6 @@ recognition.addEventListener('result', (e) => {
     p.innerText = text;
 
     if (e.results[0].isFinal){
-
         if (text.includes('one')){
             redirectWebpage(1);
         }
@@ -40,6 +39,9 @@ recognition.addEventListener('result', (e) => {
         if (text.includes('home')){
             window.location = "../index.html";
         }
+        if (text.includes('help')){
+            speak('Welcome to the level selection screen. There are 40 levels at the moment. To open a level, say the level number.');
+        }
     }
 });
 
@@ -48,3 +50,16 @@ recognition.addEventListener('end', () => {
 })
 
 recognition.start();
+
+
+function speak(text) {
+    if('speechSynthesis' in window) {
+      const speech = new SpeechSynthesisUtterance(text); // Use the text parameter
+      speech.lang = 'en-US'; // Set language
+      speech.pitch = 1; // Voice pitch (1 = normal)
+      speech.rate = 1.5; // Voice rate (1 = normal)
+      window.speechSynthesis.speak(speech); // Speak the text
+    } else {
+      console.error('Sorry, your browser does not support text-to-speech.');
+    } 
+}

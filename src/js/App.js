@@ -10,7 +10,7 @@ const RIGHT_HAND = "jkl;uiopm,./nhy"
 const LETTERS_UPPER = LETTERS_LOWER.toUpperCase();
 const DIGITS = "0123456789";
 const PUNCTUATION = "`~!@#$%^&*()_+-=[]{};':\",./<>?";
-const wordLessons = [6,12,18,3000,3001,3002,3003,3004]
+const wordLessons = [6,12,18,34,3000,3001,3002,3003,3004]
 const LESSONS = new Map([
   //Lessons
   ["Lesson 0", ["xcghasdjlcgysjlcgsjcygsljdcsdlyfgasdlycgslycgsdycs", " "]],
@@ -25,14 +25,36 @@ const LESSONS = new Map([
   ["Lesson 9", ["w o", "ww oo", "wo wo ow ow"]],
   ["Lesson 10", ["q p", "qq pp", "qp qp pq pq"]],
   ["Lesson 11", ["t y", "tt yy", "ty ty yt yt"]],
-  ["Lesson 12", ["top words"]], //not complete
+  ["Lesson 12", ["poetry wipeout tie pity your quite equip trope euro twirp our quote write wrote tire power trio pie you route"]],
   ["Lesson 13", ["r u", "rr uu", "ru ru ur ur"]],
   ["Lesson 14", ["e i", "ee ii", "ei ei ie ie"]],
   ["Lesson 15", ["w o", "ww oo", "wo wo ow ow"]],
   ["Lesson 16", ["q p", "qq pp", "qp qp pq pq"]],
   ["Lesson 17", ["t y", "tt yy", "ty ty yt yt"]],
-  ["Lesson 18", ["bottom words"]], //not complete (side note: bottom words can include home and top row vowels)
-
+  ["Lesson 18", ["cabin banjo bacon venom vocation combine men mankind ban can vaccine bin zen maven bum zebra mimic cabal balcony bazooka nexus"]],
+  ["Lesson 19", ["F J", "FF JJ", "FJ FJ JF JF"]],
+  ["Lesson 20", ["D K", "DD KK", "DK DK KD KD"]],
+  ["Lesson 21", ["S L", "SS LL", "SL SL LS LS"]],
+  ["Lesson 22", ["A ;", "AA ;;", "A; A; ;A ;A"]],
+  ["Lesson 23", ["G H", "GG HH", "GH GH HG HG"]],
+  ["Lesson 24", ["R U", "RR UU", "RU RU UR UR"]],
+  ["Lesson 25", ["E I", "EE II", "EI EI IE IE"]],
+  ["Lesson 26", ["W O", "WW OO", "WO WO OW OW"]],
+  ["Lesson 27", ["q p", "qq pp", "QP QP PQ PQ"]],
+  ["Lesson 28", ["T Y", "TT YY", "TY TY YT YT"]],
+  ["Lesson 29", ["V M", "VV MM", "VM VM MV MV"]],
+  ["Lesson 30", ["C ,", "CC ,,", "C, C, ,C ,C"]],
+  ["Lesson 31", ["X .", "XX ..", "X. X. .X .X"]],
+  ["Lesson 32", ["Z /", "ZZ //", "Z/ Z/ /Z /Z"]],
+  ["Lesson 33", ["B N", "BB NN", "BN BN NB NB"]],
+  ["Lesson 34", ["Lisbon, the Capital City of Portugal, is Home to the Longest Bridge in Europe. The Vasco da Gama Bridge in Lisbon is Seventeen Kilometers or ten and a Half Miles Long."]],
+  ["Lesson 35", ["4 7", "44 77", "47 47 74 74"]],
+  ["Lesson 36", ["3 8", "33 88", "38 38 83 83"]],
+  ["Lesson 37", ["2 9", "22 99", "29 29 92 92"]],
+  ["Lesson 38", ["1 0", "11 00", "10 10 01 01"]],
+  ["Lesson 39", ["5 6", "55 66", "56 56 65 65"]],
+  ["Lesson 40", ["2131 23728 98 32 123 834 03824 49 0394 83 578 3 75 3477 74 3 783 2138 1988 1984 82 3025678419"]],
+  
   //Practice
   ["lesson 1000", ["dad"]],
   ["lesson 2000", ["TOP_ROW"]],
@@ -53,6 +75,7 @@ const LESSONS = new Map([
 var lessonNum = parseInt(localStorage.getItem("lessonNumber"));
 var lessonPhase = 0;//changes as lesson progresses
 var lessonCompleted = false;
+var lessonStart = false;
 var wordCount = 10;
 var wordList = [
   "the", "be", "and", "a", "of", "to", "in", "i", "you", "it", "have", "to", 
@@ -106,6 +129,9 @@ var rightWordList = [
 "pull", "loom", "lion", "mile", "mill", "monk"
 ];
 let startDate;
+let wordStorage = "";
+let initialMessage = "";
+let initialWord = "";
 
 
 class TypingPractice {
@@ -167,7 +193,7 @@ class TypingPractice {
 
 
     this.dom.input.addEventListener("keydown", (e) => {
-      
+      if(lessonStart){
       if (e.key === "Backspace") {
         if (lessonNum == 0 && lessonPhase == 0) {
           this.nextPhase();
@@ -183,12 +209,15 @@ class TypingPractice {
             location.href = "../index.html";
           }
           lessonCompleted = false;
+          lessonStart = false;
         }
-        this.backup();
+        else{
+          this.backup();
+        }
         if(this.typed.length == 0){
           //TEXT TO SPEECH
           if(wordLessons.indexOf(lessonNum)>0){
-            console.log(this.given.split(" ")[0])
+            getWords("next word is " + this.given.split(" ")[0])
           }
           else{
             let tempWord = this.given.split(" ")[0].split("")
@@ -199,7 +228,7 @@ class TypingPractice {
                 tempSpeaker+= " ";
               }
             }
-            console.log(characterReplace(tempSpeaker));
+            getWords("next word is " + characterReplace(tempSpeaker));
           }
         }
       } else if(e.keyCode == 32 && lessonCompleted && lessonNum<1000){
@@ -209,12 +238,14 @@ class TypingPractice {
         this._initBuffers();
         this.render();
         lessonCompleted = false;
+        lessonStart = false;
 
       } else if(e.keyCode == 32 && lessonCompleted && lessonNum>=1000){
         this._resetCells();
         this._initBuffers();
         this.render();
         lessonCompleted = false;
+        lessonStart = false;
 
       }else if (!e.ctrlKey && e.key.match(this._charsetRegExp)) {
         if(startDate == null){
@@ -227,6 +258,17 @@ class TypingPractice {
         return;
       }
       e.preventDefault();
+      }
+      else{
+        lessonStart = true;
+        if(lessonPhase == 0){
+        startUpSpeech(initialMessage + " " + initialWord);
+        }
+        else{
+          startUpSpeech(initialWord);
+        }
+
+      }
     });
 
 
@@ -290,7 +332,7 @@ class TypingPractice {
     words.push(this._makeRandomWord());
     // }
     
-    let initialMessage;
+    
     switch(lessonNum){
       case 1000: case 2000: case 2001: case 2002: case 2003: case 2004: case 2005: case 2006: case 2007: case 2008:
         initialMessage = "In between sets of 5 letters is a space"
@@ -316,7 +358,7 @@ class TypingPractice {
       }
       tempSpeaker = characterReplace(tempSpeaker);
     }
-    console.log(initialMessage + "   " + tempSpeaker);
+    initialWord = " first word is " + tempSpeaker;
     this.given = words.join(" ");
     this.typed = "";
   }
@@ -530,11 +572,11 @@ class TypingPractice {
       }
       if(i == totalTyped.length-1 && totalGiven[i] != totalTyped[i]){
         //text to speech
-        wronger += "Wrong"
+        wronger += "  Wrong"
       }
       if(lessonNum < 1000){
         if (corrects == LESSONS.get(`Lesson ${lessonNum}`)[lessonPhase].length) {
-          console.log("nice!")
+          getWords("  next phase")
           this.nextPhase();
         }
       }
@@ -544,18 +586,17 @@ class TypingPractice {
         let accuracy = corrects/totalTyped.length
         let wpm = Math.floor((wordCount*accuracy)/(finalDate/60000))
         //SAY WPM AND ACCURACY
-        console.log(wpm);
-        console.log(accuracy*100 + "%");
+        getWords(" your words per minute is " + wpm + "   your accuracy is  "+ accuracy*100 + "%");
         //exit practice
         this.nextPhase();
       }
     });
     if(corrects!=totalTyped.length && lessonNum < 1000 && this.typed.length>1){
       //text to speech
-      wronger += "you still have a mistake!"
+      wronger += "   you still have a mistake!"
     }
     if(wronger!= ""){
-      console.log(wronger);
+      getWords(wronger);
     }
     const wordProgressGiven = this.given.split(" ");
     const wordProgressTyped = this.typed.split(" ");
@@ -571,7 +612,8 @@ class TypingPractice {
     if(totalGiven[totalTyped.length] == " "){
       //TEXT TO SPEECH THE WORD
       if(wordLessons.indexOf(lessonNum)>0){
-        console.log(wordArray[totalTyped.length+1])
+        getWords("next word is " +  wordArray[totalTyped.length+1]);
+
       }
       else{
         let tempWord = wordArray[totalTyped.length+1].split("")
@@ -582,7 +624,7 @@ class TypingPractice {
             tempSpeaker+= " ";
           }
         }
-        console.log(characterReplace(tempSpeaker));
+        getWords("next word is " + characterReplace(tempSpeaker));
       }
     }
     
@@ -644,7 +686,7 @@ class TypingPractice {
     if(lessonNum<1000){
       if (LESSONS.get(`Lesson ${lessonNum}`).length-1 <= lessonPhase) {
         //text to speech
-        console.log("press space to go to the next lesson, press backspace to exit")
+        getWords("press space to go to the next lesson, press backspace to exit")
         lessonCompleted = true;
       }
       else {
@@ -652,10 +694,11 @@ class TypingPractice {
         this._resetCells();
         this._initBuffers();
         this.render();
+        lessonStart = false;
       }
     }
     else if(lessonNum>=1000){
-      console.log("press space to go to restart, press backspace to exit")
+      getWords("press space to go to restart, press backspace to exit")
       lessonCompleted = true;
     }
 
@@ -857,15 +900,16 @@ localStorage.setItem('test', 150);
 
 if ('speechSynthesis' in window) {
     TypedInput.addEventListener('keydown', e =>{
-      const speech = new SpeechSynthesisUtterance(soundBase[keys.indexOf(e.key)]);
-      speech.rate = 1.2
+      const speech = new SpeechSynthesisUtterance(soundBase[keys.indexOf(e.key)]+ " " + wordStorage);
+      wordStorage = "";
+      speech.rate = 1.4
       if (soundBase[keys.indexOf(e.key)]!='undefined'){
         if (window.speechSynthesis.speaking) {
           window.speechSynthesis.cancel();
         }
         speech.lang = "en-US";
         window.speechSynthesis.speak(speech);
-        console.log('speaking')
+        console.log('speaking');
       }
     })
     // Speech Synthesis supported 🎉
@@ -875,10 +919,15 @@ if ('speechSynthesis' in window) {
 
 }
 
+function startUpSpeech(text){
+  const speech = text;
+  wordStorage += speech;
+}
+
 function characterReplace(string){
   string = " " + string + " ";
-  let tempArray = ['`', '1', '2', '3', '4', '5','6','7', '8', '9',  '0', '-', '=', 'Backspace', 'q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p', '[', ']', '|', 'a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', ';', "'", '"', 'z', 'x', 'c', 'v', 'b', 'n', 'm', ',', '.', '/', '*', '+', '!', '@', '#', '$', '%', '^', '&', '(', ')', '_', '{', '}', '\\', ':', '<', '>', '?', '~', ' ', 'Q', 'W', 'E', 'R', 'T', 'Y', 'U','I','O', 'P', 'A', 'S', 'D', 'F', 'G', 'G', 'H', 'J', 'K', 'L', 'Z', 'X', 'C', 'V', 'B', 'N', 'M'];
-  let secondArray = ['Grave', 'One', 'Two', 'Three', 'Four', 'Five','Six','Seven', 'Eight', 'Nine',  'Zero', 'Hyphen', 'Equal', 'Backspace', 'q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p', 'Open Bracket', 'Close Bracket', 'Pipe', 'a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', 'Semicolon', "Single Quote", 'Double  Quote', 'z', 'x', 'c', 'v', 'b', 'n', 'm', 'Comma', 'Dot', 'Slash', 'Asterisk', 'Addition', 'Exclamation', 'At', 'Pound', 'Dollar Sign', 'Percent', 'Carat', 'And', 'Left Bracket', 'Right Bracket', 'Underscore', 'Open Brace', 'Close Brace', 'Backslash', 'Colon', 'Less Than', 'Greater Than', 'Question Mark', 'Tilde', 'Spacebar', 'Q', 'W', 'E', 'R', 'T', 'Y', 'U','I','O', 'P', 'A', 'S', 'D', 'F', 'G', 'G', 'H', 'J', 'K', 'L', 'Z', 'X', 'C', 'V', 'B', 'N', 'M'];
+  let tempArray = ['`', '1', '2', '3', '4', '5','6','7', '8', '9',  '0', '-', '=', 'Backspace', 'q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p', '[', ']', '|', 'a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', ';', "'", '"', 'z', 'x', 'c', 'v', 'b', 'n', 'm', ',', '.', '/', '*', '+', '!', '@', '#', '$', '%', '^', '&', '(', ')', '_', '{', '}', '\\', ':', '<', '>', '?', '~', ' ', 'Q', 'W', 'E', 'R', 'T', 'Y', 'U','I','O', 'P', 'A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', 'Z', 'X', 'C', 'V', 'B', 'N', 'M'];
+  let secondArray = ['Grave', 'One', 'Two', 'Three', 'Four', 'Five','Six','Seven', 'Eight', 'Nine',  'Zero', 'Hyphen', 'Equal', 'Backspace', 'q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p', 'Open Bracket', 'Close Bracket', 'Pipe', 'a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', 'Semicolon', "Single Quote", 'Double  Quote', 'z', 'x', 'c', 'v', 'b', 'n', 'm', 'Comma', 'Dot', 'Slash', 'Asterisk', 'Addition', 'Exclamation', 'At', 'Pound', 'Dollar Sign', 'Percent', 'Carat', 'And', 'Left Bracket', 'Right Bracket', 'Underscore', 'Open Brace', 'Close Brace', 'Backslash', 'Colon', 'Less Than', 'Greater Than', 'Question Mark', 'Tilde', 'Spacebar', 'capital Q', 'capital  W', 'capital  E', 'capital  R', 'capital  T', 'capital  Y', 'capital  U','capital  I','capital  O', 'capital  P', 'capital  A', 'capital  S', 'capital  D', 'capital  F', 'capital  G', 'capital  H', 'capital  J', 'capital  K', 'capital  L', 'capital  Z', 'capital  X', 'capital  C', 'capital  V', 'capital  B', 'capital  N', 'capital  M'];
 
   [...tempArray].forEach((c,i)=>{
     string = string.replace(" " + c + " ", " " + secondArray[i] + " ");
@@ -886,4 +935,7 @@ function characterReplace(string){
   return string;
 }
 
+function getWords(text){
+  wordStorage += "  " + text;
+}
 
