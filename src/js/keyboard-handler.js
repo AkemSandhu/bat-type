@@ -2,17 +2,15 @@ var mode = 'enter'
 const head = document.getElementById('head')
 const Current = document.getElementById('Current')
 const New = document.getElementById('New')
-
-const Keys = localStorage.getItem('Keys')
-var soundBase = ['Grave', 'One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine', 'Zero', 'Hyphen', 'Equal', 'Backspace', 'q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p', 'Open Bracket', 'Close Bracket', 'Pipe', 'a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', 'Semicolon', "Single Quote", 'Double  Quote', 'z', 'x', 'c', 'v', 'b', 'n', 'm', 'Comma', 'Dot', 'Slash', 'Asterisk', 'Addition', 'Exclamation', 'At', 'Pound', 'Dollar Sign', 'Percent', 'Carat', 'And', 'Left Bracket', 'Right Bracket', 'Underscore', 'Open Brace', 'Close Brace', 'Backslash', 'Colon', 'Less Than', 'Greater Than', 'Question Mark', 'Tilde', 'Space bar', 'Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P', 'A', 'S', 'D', 'F', 'G', 'G', 'H', 'J', 'K', 'L', 'Z', 'X', 'C', 'V', 'B', 'N', 'M']
-if (localStorage.getItem('soundBase')!=null){
-    soundBase = localStorage.getItem('soundBase');
-    console.log('get')
-}
+testing = localStorage.getItem('test'); // Retrieve and parse
+const data = JSON.parse(localStorage.getItem('keyName'));
+console.log(data)
+const Keys = ['`', '1', '2', '3', '4', '5','6','7', '8', '9',  '0', '-', '=', 'Backspace', 'q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p', '[', ']', '|', 'a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', ';', "'", '"', 'z', 'x', 'c', 'v', 'b', 'n', 'm', ',', '.', '/', '*', '+', '!', '@', '#', '$', '%', '^', '&', '(', ')', '_', '{', '}', '\\', ':', '<', '>', '?', '~', ' ', 'Q', 'W', 'E', 'R', 'T', 'Y', 'U','I','O', 'P', 'A', 'S', 'D', 'F', 'G', 'G', 'H', 'J', 'K', 'L', 'Z', 'X', 'C', 'V', 'B', 'N', 'M']
 
 
 document.addEventListener("DOMContentLoaded", function () {
     console.log(101)
+    
 });
 
 document.addEventListener("keydown", e =>{
@@ -34,7 +32,7 @@ if ('speechSynthesis' in window) {
     document.addEventListener('keydown', e => {
         console.log(mode)
         if (mode == 'selection'){
-            console.log(e.key)
+            console.log(soundBase[Keys.indexOf(e.key)])
             const speech = new SpeechSynthesisUtterance(soundBase[Keys.indexOf(e.key)]);
             speech.rate = 1.2
             if (soundBase[Keys.indexOf(e.key)] != 'undefined') {
@@ -78,8 +76,10 @@ if ('speechSynthesis' in window) {
 
             if (isListening) {
                 recognition.stop(); // Stop recognition if it's currently listening
+                console.log('stop')
             } else {
                 recognition.start(); // Start recognition if it's not listening
+                console.log('start')
                 isListening = true; // Mark it as listening
             }
         }
