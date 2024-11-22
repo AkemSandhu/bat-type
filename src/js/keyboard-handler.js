@@ -6,8 +6,6 @@ soundBase = window.testList
 const Keys = ['`', '1', '2', '3', '4', '5','6','7', '8', '9',  '0', '-', '=', 'Backspace', 'q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p', '[', ']', '|', 'a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', ';', "'", '"', 'z', 'x', 'c', 'v', 'b', 'n', 'm', ',', '.', '/', '*', '+', '!', '@', '#', '$', '%', '^', '&', '(', ')', '_', '{', '}', '\\', ':', '<', '>', '?', '~', ' ', 'Q', 'W', 'E', 'R', 'T', 'Y', 'U','I','O', 'P', 'A', 'S', 'D', 'F', 'G', 'G', 'H', 'J', 'K', 'L', 'Z', 'X', 'C', 'V', 'B', 'N', 'M']
 
 
-
-
 if (mode == 'enter'){
     head.textContent = 'Choose a key'
     Current.textContent = 'Current Key Audio:'
@@ -19,7 +17,6 @@ if (mode == 'enter'){
         mode = 'selection'; // Change mode to 'selection' after the utterance ends
     };
 }
-
 
 document.addEventListener("keydown", e =>{
     if (mode == 'enter'){
@@ -39,6 +36,7 @@ document.addEventListener("keydown", e =>{
 })
 var tempIndex;
 var vocalInput;
+    
 if ('speechSynthesis' in window) {
    
     console.log('supported')
@@ -59,7 +57,6 @@ if ('speechSynthesis' in window) {
                 speech.onend = ()=>{
                     mode = 'changing'
                 }
-
 
             }else{
                 console.log('invalid')
@@ -87,17 +84,14 @@ if ('speechSynthesis' in window) {
         console.log('enter 101')
         if (mode == 'record'){
 
-
             let recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
             let isListening = false;
-
 
             // Set up the recognition event handlers
             recognition.onresult = (event) => {
                 console.log(event.results[0][0])
-               
+                
             };
-
 
             recognition.onend = () => {
                 isListening = false; // Mark listening as false when recognition ends
@@ -105,13 +99,11 @@ if ('speechSynthesis' in window) {
                 mode = 'confirmation'
             };
 
-
             recognition.onresult = (result) => {
                 vocalInput = result.results[0][0].transcript;
                 console.log(vocalInput);
                 New.textContent = 'New Key Audio: ' + vocalInput
             }
-
 
             recognition.start()
         }
@@ -153,7 +145,7 @@ if ('speechSynthesis' in window) {
             }
         }
     }
-   
+    
   })
   // Speech Synthesis supported 🎉
 } else {

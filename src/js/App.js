@@ -1054,7 +1054,7 @@ function makeConnectingPath(x1, y1, x2, y2, radius = 25) {
 //
 
 
-const metronome = new Metronome(document.getElementById("metronome"));
+//const metronome = new Metronome(document.getElementById("metronome"));
 const practice = new TypingPractice(document.getElementById("practice"));
 
 
@@ -1070,7 +1070,6 @@ const TypedInput = document.getElementById('typedIn')
 var test =  ['one', 'two', 'Ben']
 localStorage.setItem('keyName', JSON.stringify(test));
 localStorage.setItem('test', 150);
-
 
 if ('speechSynthesis' in window) {
     TypedInput.addEventListener('keydown', e =>{
