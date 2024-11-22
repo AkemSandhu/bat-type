@@ -36,8 +36,9 @@ document.addEventListener("keydown", e =>{
 })
 var tempIndex;
 var vocalInput;
-if ('speechSynthesis' in window) {
     
+if ('speechSynthesis' in window) {
+   
     console.log('supported')
     document.addEventListener('keydown', e => {
         if (mode == 'selection'){
@@ -151,5 +152,3 @@ if ('speechSynthesis' in window) {
   // Speech Synthesis Not Supported 😣
   alert("Sorry, your browser doesn't support text to speech!");
 }
-
-
